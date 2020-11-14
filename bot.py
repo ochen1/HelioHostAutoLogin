@@ -1,5 +1,6 @@
 from requests import post
 from os import getenv
+from time import strftime, gmtime
 
 def run(username: str,
 		password: str,
@@ -29,6 +30,19 @@ def run(username: str,
 	)
 	cookies = r.headers.get('Set-Cookie')
 	print(cookies)
+
+
+def automatic_execution():
+	print(f"Script running @ {strftime('%Y-%m-%dT%H:%M:%SZ', gmtime())} ...")
+	cookie_response = run(getenv("USER"), getenv("PWD"))
+	print(cookie_response[0:11])
+	# Don't print too much information to the console, because unauthorized eyes might see it
+
+def run_repeatedly():
+	schedule.every().monday.at("16:00").do(automatic_execution)
+	while True:
+		schedule.run_pending()
+		sleep(1)
 
 
 if __name__ == '__main__':
