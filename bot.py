@@ -50,7 +50,7 @@ def send_report_email(cookie_response, login_time=None):
 		getenv("EMAIL"),
 		getenv("SMTPPWD"),
 		gen_message(
-			"Email Reports <%s>" % getenv("SMTPUSR"),
+			"Heliohost Auto Login Bot <%s>" % getenv("SMTPUSR"),
 			getenv("EMAIL"),
 			"HelioHost Auto Login Bot - Report",
 			"""Hello there!
