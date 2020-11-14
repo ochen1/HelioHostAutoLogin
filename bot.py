@@ -1,6 +1,7 @@
 from requests import post
 from os import getenv
 from time import strftime, gmtime
+from time import sleep
 from emailslib import gen_message, send_email
 
 # Environment variables
