@@ -42,6 +42,7 @@ def run(username: str,
 	)
 	cookies = r.headers.get('Set-Cookie')
 	print(cookies)
+	return cookies
 
 
 def send_report_email(cookie_response, login_time=None):
