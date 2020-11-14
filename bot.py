@@ -41,7 +41,6 @@ def run(username: str,
 		}
 	)
 	cookies = r.headers.get('Set-Cookie')
-	print(cookies)
 	return cookies
 
 
