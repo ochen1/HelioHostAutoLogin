@@ -4,6 +4,8 @@ from time import strftime, gmtime
 from time import sleep
 from emailslib import gen_message, send_email
 import schedule
+from flask import Flask
+from threading import Thread
 
 # Environment variables
 # SMTPUSR -	The user that sends the emails
@@ -12,6 +14,7 @@ import schedule
 # USER - 	The username of the HelioHost account
 # PWD - 	The password of the HelioHost account
 # REPEAT -	Repeat the login every Monday
+# FLASK - 	Also run a Flask ping endpoint
 
 
 def run(username: str,
@@ -105,10 +108,23 @@ def run_repeatedly():
 		schedule.run_pending()
 		sleep(1)
 
-if getenv("REPEAT"):
+app = Flask(__name__)
+@app.route('/ping')
+def ping():
+	return 'Pong!'
+def start_ping_endpoint():
+	app.run(host="0.0.0.0", port=8080)
+
+if __name__ == '__main__' and getenv("FLASK") and getenv("REPEAT"):
+	try:
+		Thread(target=run_repeatedly, daemon=True).start()
+		start_ping_endpoint()
+	except KeyboardInterrupt:
+		pass
+elif __name__ == '__main__' and getenv("REPEAT"):
 	try:
 		run_repeatedly()
 	except KeyboardInterrupt:
-		print()
+		pass
 elif __name__ == '__main__':
 	run(getenv("USER"), getenv("PWD"))
