@@ -103,6 +103,9 @@ def run_repeatedly():
 		sleep(1)
 
 if getenv("REPEAT"):
-	run_repeatedly()
+	try:
+		run_repeatedly()
+	except KeyboardInterrupt:
+		print()
 elif __name__ == '__main__':
 	run(getenv("USER"), getenv("PWD"))
