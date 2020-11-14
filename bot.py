@@ -3,6 +3,13 @@ from os import getenv
 from time import strftime, gmtime
 from emailslib import gen_message, send_email
 
+# Environment variables
+# SMTPUSR -	The user that sends the emails
+# EMAIL - 	The email address of the recipient
+# SMTPPWD -	The authentication password for the sender
+# USER - 	The username of the HelioHost account
+# PWD - 	The password of the HelioHost account
+
 
 def run(username: str,
 		password: str,
