@@ -1,6 +1,8 @@
 from requests import post
 from os import getenv
 from time import strftime, gmtime
+from emailslib import gen_message, send_email
+
 
 def run(username: str,
 		password: str,
@@ -32,11 +34,57 @@ def run(username: str,
 	print(cookies)
 
 
+def send_report_email(cookie_response, login_time=None):
+	send_email(
+		getenv("SMTPUSR"),
+		getenv("EMAIL"),
+		getenv("SMTPPWD"),
+		gen_message(
+			"Email Reports <%s>" % getenv("SMTPUSR"),
+			getenv("EMAIL"),
+			"HelioHost Auto Login Bot - Report",
+			"""Hello there!
+
+Thanks for using the HelioHost Auto Login Bot!
+
+We recently{time} attempted a login into your account.
+
+Here is your session cookie for Heliohost:
+{cookies}
+
+Sincerely,
+Heliohost Auto Login Bot.
+
+--------------------------------
+
+This message was sent to {receiver} from {source} because you subscribed to the email notifications.
+If this action was not requested by you, please discard this email and DO NOT use the confidential data included in the email.
+""" \
+			.format(
+				cookies=cookie_response.strip(),
+				time=(" (%s)" % strftime('%Y-%m-%dT%H:%M:%SZ', login_time) if login_time is not None else ''),
+				receiver=getenv("EMAIL"),
+				source=getenv("SMTPUSR")
+			)
+		)
+	)
+
+
 def automatic_execution():
-	print(f"Script running @ {strftime('%Y-%m-%dT%H:%M:%SZ', gmtime())} ...")
+	now = gmtime()
+	print(f"Script running @ {strftime('%Y-%m-%dT%H:%M:%SZ', now)} ...")
 	cookie_response = run(getenv("USER"), getenv("PWD"))
 	print(cookie_response[0:11])
 	# Don't print too much information to the console, because unauthorized eyes might see it
+	if getenv("EMAIL"):
+		print(f"Sending email to {getenv('EMAIL')}")
+		send_report_email(cookie_response, login_time=now)
+	else:
+		print(
+			"No EMAIL environment variable specified.",
+			"Not sending any emails.",
+			sep='\n'
+		)
 
 def run_repeatedly():
 	schedule.every().monday.at("16:00").do(automatic_execution)
