@@ -82,13 +82,15 @@ If this action was not requested by you, please discard this email and DO NOT us
 
 def automatic_execution():
 	now = gmtime()
-	print(f"Script running @ {strftime('%Y-%m-%dT%H:%M:%SZ', now)} ...")
+	print(f"Script running @ {strftime('%Y-%m-%dT%H:%M:%SZ', now)} ...", end=' ', flush=True)
 	cookie_response = run(getenv("USER"), getenv("PWD"))
-	print(cookie_response[0:11])
+	print("logged in.")
 	# Don't print too much information to the console, because unauthorized eyes might see it
+	print("Server Response (trimmed):", cookie_response[0:11])
 	if getenv("EMAIL"):
-		print(f"Sending email to {getenv('EMAIL')}")
+		print(f"Sending email to {getenv('EMAIL')}...", end=' ', flush=True)
 		send_report_email(cookie_response, login_time=now)
+		print("done.")
 	else:
 		print(
 			"No EMAIL environment variable specified.",
