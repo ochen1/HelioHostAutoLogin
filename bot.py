@@ -10,6 +10,7 @@ from emailslib import gen_message, send_email
 # SMTPPWD -	The authentication password for the sender
 # USER - 	The username of the HelioHost account
 # PWD - 	The password of the HelioHost account
+# REPEAT -	Repeat the login every Monday
 
 
 def run(username: str,
@@ -100,6 +101,7 @@ def run_repeatedly():
 		schedule.run_pending()
 		sleep(1)
 
-
-if __name__ == '__main__':
+if getenv("REPEAT"):
+	run_repeatedly()
+elif __name__ == '__main__':
 	run(getenv("USER"), getenv("PWD"))
