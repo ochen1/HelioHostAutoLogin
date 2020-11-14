@@ -3,6 +3,7 @@ from os import getenv
 from time import strftime, gmtime
 from time import sleep
 from emailslib import gen_message, send_email
+import schedule
 
 # Environment variables
 # SMTPUSR -	The user that sends the emails
